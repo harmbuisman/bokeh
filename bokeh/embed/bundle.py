@@ -22,12 +22,14 @@ log = logging.getLogger(__name__)
 
 # Standard library imports
 from warnings import warn
+from os.path import join, dirname
 
 # External imports
 
 # Bokeh imports
 from ..document.document import Document
 from ..resources import BaseResources
+from ..model import Model
 from ..util.compiler import bundle_models
 from .wrappers import wrap_in_script_tag
 
@@ -91,6 +93,23 @@ def bundle_for_objs_and_resources(objs, resources):
         bokeh_js = js_resources.render_js()
     else:
         bokeh_js = None
+
+    names = set()
+
+    for obj in _all_objs(objs) if objs is not None else Model.model_class_reverse_map.values():
+        name = obj.__view_module__.split(".")[0]
+        if name == "bokeh":
+            continue
+        if name in names:
+            continue
+        names.add(name)
+        module = __import__(name)
+        artifact = join(dirname(module.__file__), "dist", name + ".js")
+        bundle = wrap_in_script_tag(js_resources._inline(artifact))
+        if bokeh_js is not None:
+            bokeh_js += "\n" + bundle
+        else:
+            bokeh_js = bundle
 
     models = [ obj.__class__ for obj in _all_objs(objs) ] if objs else None
     custom_bundle = bundle_models(models)

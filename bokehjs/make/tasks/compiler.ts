@@ -25,6 +25,8 @@ task("compiler:build", ["compiler:ts"], async () => {
   const cache = argv.cache !== false ? join(build_dir.js, "compiler-cache.json") : undefined
 
   const linker = new Linker({entries, bases, externals, builtins, minify, cache})
+
+  if (!argv.rebuild) linker.load_cache()
   const [bundle] = linker.link()
   linker.store_cache()
 

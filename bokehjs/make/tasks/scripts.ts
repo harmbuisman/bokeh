@@ -33,6 +33,7 @@ task("scripts:bundle-es6", ["scripts:compile"], async () => {
     externals: ["@jupyter-widgets/base"],
   })
 
+  if (!argv.rebuild) linker.load_cache()
   const bundles = linker.link()
   linker.store_cache()
 
@@ -62,6 +63,7 @@ task("scripts:bundle-es5", ["scripts:compile"], async () => {
     transpile: true,
   })
 
+  if (!argv.rebuild) linker.load_cache()
   const bundles = linker.link()
   linker.store_cache()
 

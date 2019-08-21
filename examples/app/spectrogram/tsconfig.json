@@ -12,18 +12,24 @@
     "alwaysStrict": true,
     "noErrorTruncation": true,
     "noEmitOnError": false,
-    "declaration": true,
-    "sourceMap": true,
+    "declaration": false,
+    "sourceMap": false,
     "importHelpers": false,
     "experimentalDecorators": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "target": "ES2015",
+    "target": "ES5",
     "lib": ["es2015", "dom"],
-    "types": ["node"],
-    "baseUrl": "."
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@bokehjs/*": [
+        "./node_modules/bokehjs/build/js/lib/*",
+        "./node_modules/bokehjs/build/js/types/*"
+      ]
+    }
   },
   "include": ["./**/*.ts"]
 }
